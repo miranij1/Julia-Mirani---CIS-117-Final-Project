@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gutenberg Word Explorer</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2rem; }
+        h1 { margin-bottom: 0.5rem; }
+        .section { margin-bottom: 2rem; padding: 1rem; border: 1px solid #ccc; border-radius: 6px; }
+        label { display: block; margin-bottom: 0.25rem; font-weight: bold; }
+        input[type="text"] { width: 100%; padding: 0.5rem; margin-bottom: 0.5rem; }
+        button { padding: 0.5rem 1rem; cursor: pointer; }
+        .message { color: green; margin-bottom: 1rem; }
+        .error { color: red; margin-bottom: 1rem; }
+        table { border-collapse: collapse; margin-top: 1rem; }
+        th, td { border: 1px solid #ccc; padding: 0.5rem 0.75rem; }
+    </style>
+</head>
+<body>
+    <h1>Project Gutenberg Word Explorer</h1>
+    <p>Search books and see their ten most frequent words.</p>
+
+    {% if message %}
+        <div class="message">{{ message }}</div>
+    {% endif %}
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <div class="section">
+        <h2>Search by Title (Local Database)</h2>
+        <form method="post">
+            {% csrf_token %}
+            <label for="title">Book title:</label>
+            <input type="text" id="title" name="title" value="{{ title_query }}">
+            <button type="submit" name="search_title">Search Local Database</button>
+        </form>
+    </div>
+
+    <div class="section">
+        <h2>Add/Update Book from Project Gutenberg URL</h2>
+        <p>Paste the plain-text URL of the book from Project Gutenberg (ending in <code>.txt</code>).</p>
+        <form method="post">
+            {% csrf_token %}
+            <label for="url">Project Gutenberg text URL:</label>
+            <input type="text" id="url" name="url" value="{{ url_query }}">
+            <button type="submit" name="load_url">Load from URL</button>
+        </form>
+    </div>
+
+    {% if book %}
+        <div class="section">
+            <h2>Top 10 Words for: "{{ book.title }}"</h2>
+            {% if word_frequencies %}
+                <table>
+                    <tr>
+                        <th>Word</th>
+                        <th>Frequency</th>
+                    </tr>
+                    {% for wf in word_frequencies %}
+                        <tr>
+                            <td>{{ wf.word }}</td>
+                            <td>{{ wf.frequency }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p>No word frequency data available for this book yet.</p>
+            {% endif %}
+        </div>
+    {% endif %}
+</body>
+</html>
