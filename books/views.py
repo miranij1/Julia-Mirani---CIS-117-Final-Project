@@ -11,61 +11,58 @@ STOPWORDS = {
     # pronouns
     "i", "you", "he", "she", "it", "we", "they",
     "me", "him", "her", "us", "them",
-    "my", "your", "yours", "his", "her", "its", "our", "ours", "their", "theirs",
+    "my", "your", "yours", "his", "its", "our", "ours", "their", "theirs",
 
-    # articles / basic function words
-    "a", "an", "the",
+    # articles / determiners
+    "a", "an", "the", "this", "that", "these", "those",
 
-    # conjunctions / linking words
+    # coordinating conjunctions
     "and", "or", "but", "so", "yet", "for", "nor",
 
-    # common verbs/auxiliaries
-    "is", "am", "are", "was", "were", "be", "been", "being",
-    "have", "has", "had", "do", "does", "did",
-    "can", "could", "shall", "should", "will", "would", "may", "might", "must",
+    # subordinating conjunctions
+    "because", "although", "since", "while", "as", "if", "when", "though", "which",
 
-    # prepositions / common adverbs
+    # prepositions
     "in", "on", "at", "by", "to", "from", "of", "off", "out",
     "over", "under", "up", "down", "with", "without", "into",
     "about", "before", "after", "between", "through", "during",
-    "again", "then", "there", "here",
 
-    # other super common words
-    "this", "that", "these", "those",
-    "all", "any", "some", "no", "not", "very", "just", "than",
+    # auxiliary verbs
+    "is", "am", "are", "was", "were", "be", "been", "being",
+    "have", "has", "had", "do", "does", "did",
+    "can", "could", "shall", "should", "will", "would",
+    "may", "might", "must",
+
+    # adverbs / fillers
+    "very", "just", "then", "there", "here", "again", "like",
+
+    # quantifiers
+    "all", "any", "some", "no", "not",
+
+    # common numbers
     "one", "two", "three",
 }
 
 
-
 def clean_text_to_words(text: str) -> list[str]:
-    """
-    Take a large text string, normalize it, and return a list of words
-    without punctuation and stopwords.
-    """
-    # Make everything lowercase
     text = text.lower()
 
-    # Replace punctuation with spaces
     chars_to_replace = ",.;:!?\"'()[]{}-_*/\\\n\r\t"
     for ch in chars_to_replace:
         text = text.replace(ch, " ")
 
-    # Split into words
     words = text.split()
 
-        # Filter out stopwords, very short "words", and non-alphabetic tokens
     filtered = [
         w for w in words
         if w.isalpha() and w not in STOPWORDS and len(w) > 1
     ]
-
     return filtered
 
 
 def fetch_gutenberg_text(url: str) -> str:
     """
-    Given a Project Gutenberg plain-text URL, download and return the text.
+    Given a Project Gutenberg URL, download and return the text.
     Raises an exception if something goes wrong.
     """
     try:
@@ -90,12 +87,9 @@ def extract_title_from_gutenberg(text: str) -> str:
 
 
 def compute_top_words(text: str, limit: int = 10) -> list[tuple[str, int]]:
-    """
-    Given a big text, return a list of (word, frequency) tuples
-    for the top 'limit' most common words.
-    """
     words = clean_text_to_words(text)
     counts = Counter(words)
+
     return counts.most_common(limit)
 
 
@@ -139,11 +133,11 @@ def book_search_view(request):
                         "If this is a Project Gutenberg book, paste its text URL below to add it."
                     )
 
+
         elif "load_url" in request.POST:
-            # Load from a Project Gutenberg URL and update database
+            #Load from a Project Gutenberg URL and update database
             url = request.POST.get("url", "").strip()
             context["url_query"] = url
-
             if not url:
                 context["error"] = "Please enter a Project Gutenberg text URL."
             else:
@@ -182,9 +176,11 @@ def book_search_view(request):
                     )
 
                 except RuntimeError as e:
-                    context["error"] = str(e)
+                    context["error"] = "Book was not found. Please check the URL and try again."
                 except Exception as e:
-                    context["error"] = f"Unexpected error: {e}"
+                    context["error"] = "Book was not found. Please check the Project Gutenberg URL is correct."
+
+            
 
     return render(request, "books/book_search.html", context)
 

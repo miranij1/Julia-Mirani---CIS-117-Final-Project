@@ -1,7 +1,8 @@
 from django.contrib import admin
-from django.urls import path, include  # include is important!
+from django.urls import path, include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("books/", include("books.urls")),  # send /books/ to the books app
+    # This sends the root URL (/) to the books app
+    path("", include("books.urls")),
 ]
