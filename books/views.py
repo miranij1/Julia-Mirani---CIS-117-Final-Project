@@ -44,9 +44,15 @@ STOPWORDS = {
 
     # adverbs / fillers
     "very", "just", "then", "there", "here", "again", "like",
+    "now", "how", "where", "why", "who", "what",  # ADDED THESE
+    
+    # common verbs (ADD THIS SECTION)
+    "go", "went", "come", "came", "said", "took", "get", "got",
+    "make", "made", "see", "saw", "know", "take", "give", "gave",
 
     # quantifiers
     "all", "any", "some", "no", "not",
+    "away",  # ADDED THIS
 
     # common numbers
     "one", "two", "three",
