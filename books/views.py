@@ -236,10 +236,14 @@ def book_search_view(request):
                     context["book"] = book
                     context["word_frequencies"] = (
                         WordFrequency.objects.filter(book=book)[:10]
-                    )
-                    context["message"] = (
-                        f"Loaded '{book.title}' from Project Gutenberg and updated the database."
-                    )
+                    if created:
+                        context["message"] = (
+                            f"Loaded '{book.title}' from Project Gutenberg and added to the database."
+                        )
+                    else:
+                        context["message"] = (
+                            f"Updated '{book.title}' in the database with new word frequencies."
+                        )
 
                 except RuntimeError as e:
                     #Handle URL fetch errors
