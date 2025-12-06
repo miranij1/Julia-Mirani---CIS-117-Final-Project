@@ -1,7 +1,7 @@
 <!--
 Template: book_search.html
-Purpose: Main user inteface for the Project Gutenberg Word Explorer app.
-Description: This template provides a web interface for users to search booksby titel in the local database or add/update books from Project Gutenberg URLs. It displays the ten most frequent words in the selected book.
+Purpose: Main user interface for the Project Gutenberg Word Explorer app.
+Description: This template provides a web interface for users to search books by titel in the local database or add/update books from Project Gutenberg URLs. It displays the ten most frequent words in the selected book.
 
 -->
 
@@ -23,7 +23,7 @@ Description: This template provides a web interface for users to search booksby 
         input[type="text"] { width: 100%; padding: 0.5rem; margin-bottom: 0.5rem; }
         /*Button styling*/
         button { padding: 0.5rem 1rem; cursor: pointer; }
-        /*Sucess message styling*/
+        /*Sucsess message styling*/
         .message { color: green; margin-bottom: 1rem; }
         /*Error message styling*/
         .error { color: red; margin-bottom: 1rem; }
@@ -60,7 +60,7 @@ Description: This template provides a web interface for users to search booksby 
     <!--Section 2: Load a new book from Project Gutenberg URL-->
     <div class="section">
         <h2>Add/Update Book from Project Gutenberg URL</h2>
-        <p>Paste the plain-text URL of the book from Project Gutenberg (ending in <code>.txt</code>).</p>
+        <p>Paste the plain-text URL of the book from Project Gutenberg.</p>
         <form method="post">
             {% csrf_token %} <!--Django security token-->
             <label for="url">Project Gutenberg text URL:</label>

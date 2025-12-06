@@ -3,7 +3,7 @@ Project Gutenberg Word Explorer
 A Django web application that grabs books from Project Gutenberg, analyzes word frequency, and stores results in a local database.
 Users can serch for books by title or load new books with a URL.
 Author: Julia Mirani
-Date: 12/04/2025
+Date: 12/05/2025
 Course: CIS 117
 """
 
@@ -184,6 +184,10 @@ def book_search_view(request):
                         context["message"] = (
                             "Book found in database, but no word frequencies stored."
                         )
+                    else: 
+                        context["message"] = (
+                            f"Found '{book,title}' in the local database."
+                        )
                     context["book"] = book
                     context["word_frequencies"] = word_freqs
                 except Book.DoesNotExist:
@@ -232,18 +236,19 @@ def book_search_view(request):
                                 frequency=freq,
                             )
 
-                    #Update context with the book and its word frequencies 
-                    context["book"] = book
-                    context["word_frequencies"] = (
-                        WordFrequency.objects.filter(book=book)[:10]
-                    if created:
-                        context["message"] = (
-                            f"Loaded '{book.title}' from Project Gutenberg and added to the database."
+                        #Update context with the book and its word frequencies 
+                        context["book"] = book
+                        context["word_frequencies"] = (
+                            WordFrequency.objects.filter(book=book)[:10]
                         )
-                    else:
-                        context["message"] = (
-                            f"Updated '{book.title}' in the database with new word frequencies."
-                        )
+                        if created:
+                            context["message"] = (
+                                f"Loaded '{book.title}' from Project Gutenberg and added to the database."
+                            )
+                        else:
+                            context["message"] = (
+                                f"Updated '{book.title}' in the database with new word frequencies."
+                            )
 
                 except RuntimeError as e:
                     #Handle URL fetch errors
